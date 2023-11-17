@@ -69,8 +69,15 @@ void testCoefficients() {
 			Polynomial p;
 			p.coefficientInsert(10, 5);
  		} catch (const std::runtime_error& ex) {
-			assertEqual(strcmp(ex.what(), "Error: index exceed coefficients array size "), 0, "Accessing value with index out of range");
+			assertEqual(strcmp(ex.what(), "Error: index exceed coefficients array size"), 0, "Accessing value with index out of range");
 		}
+	}
+	std::cout << "Test Coefficients OK" << std::endl;
+}
+
+void testSum() {
+	{
+		Polynomial p1();
 	}
 }
 

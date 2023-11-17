@@ -31,3 +31,9 @@ void Polynomial::coefficientInsert(unsigned int index, int value) {
     if (index >= size) throw std::runtime_error("Error: index exceed coefficients array size");
     coefficients[index] = value;
 }
+
+Polynomial& Polynomial::operator+(const Polynomial& p) {
+    for (int i = 0; i < size; i++) {
+        this->coefficients[i] += p.coefficients[i];
+    }
+}
