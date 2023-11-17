@@ -15,7 +15,6 @@ public:
     int coefficientAt(unsigned int);
     void coefficientInsert(unsigned int, int);
 private:
-    Coefficients coefficients;
     unsigned int degree{};
 };
 
