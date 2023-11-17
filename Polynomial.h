@@ -1,6 +1,20 @@
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
 
+class Coefficients {
+private:
+    int size{};
+    int* values{};
+public:
+    Coefficients() = default;
+    Coefficients(int);
+    Coefficients(int, int*);
+
+    inline unsigned int size() { return size; }
+    int at(unsigned int);
+    void insert(unsigned int, int);
+};
+
 class Polynomial {
 public:
     Polynomial() = default;
@@ -15,6 +29,7 @@ public:
     int coefficientAt(unsigned int);
     void coefficientInsert(unsigned int, int);
 private:
+    Coefficients coefficients;
     unsigned int degree{};
 };
 
