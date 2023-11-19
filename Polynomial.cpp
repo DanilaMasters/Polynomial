@@ -9,14 +9,14 @@ Polynomial::Polynomial(const unsigned int degree) {
 }
 
 Polynomial::Polynomial(const unsigned int degree , const int* coefficients) : Polynomial(degree) {
-    for (unsigned int i = 0; i < degree + 1; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         this->coefficients[i] = coefficients[i];
     }
 }
 
 Polynomial::Polynomial(std::initializer_list<int> list) : Polynomial(list.size() - 1) {
     unsigned int i = 0;
-    for (auto& item : list) {
+    for (auto item : list) {
         this->coefficients[i++] = item;
     }
 }
@@ -41,7 +41,7 @@ void Polynomial::setCoefficientAt(unsigned int index, double value) {
     coefficients[index] = value;
 }
 
-double Polynomial::operator()(double x) {
+/*double Polynomial::operator()(double x) {
     int* tmp = new int[size], sum = 0;
     int q = 1;
     for (unsigned int i = 0; i < size; i++) {
@@ -51,6 +51,14 @@ double Polynomial::operator()(double x) {
         sum += tmp[i];
     }
     return sum;
+}*/
+
+double Polynomial::operator()(double x) {
+    double result = coefficients[getDegree()];
+    for (int i = getDegree() - 1; i >= 0; i--) {
+        result = result * x + coefficients[i];
+    }
+    return result;
 }
 
 /*int Polynomial::calculate(int value) const {
@@ -109,13 +117,17 @@ Polynomial Polynomial::operator*(Polynomial& p) {
 
 std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
     for (unsigned int i = 0; i < p.getSize(); i++) {
-        if (p.getCoefficientAt(i) != 0) {
-            os << p.getCoefficientAt(i) << "x^" << p.getDegree() - i;
+        if (p.getCoefficientAt(p.getSize() - 1 - i) != 0) {
+            os << p.getCoefficientAt(p.getSize() - 1 - i) << "x^" << p.getSize() - 1 - i;
             if (i < p.getSize() - 1) {
                 os << " + ";
             }
         }
     }
+    
+    /*for (unsigned int i = 0; i < p.getSize(); i++) {
+        os << p.getCoefficientAt(i) << " ";
+    }*/
     return os;
 }
 

@@ -88,30 +88,18 @@ void testCoefficients() {
 
 void testSum() {
 	{
-		Polynomial p1({1, 2, 3, 4, 5});
-		Polynomial p2({1, 2, 3, 4});
-
-		auto sum = { 2, 4, 6, 8, 5 };
-
-		Polynomial result = p1 + p2;
-
-		unsigned int i = 0;
-		for (auto value : sum) {
-			assertEqual(result.getCoefficientAt(i++), value, "Error: sum operation using class method");
-		}
-	}
-
-	{
 		Polynomial p1({5, 6, 3, 2, 6});
 		Polynomial p2({3, 1, 3, 6});
 
 		auto sum = { 8, 7, 6, 8, 6 };
-
-		Polynomial result(addition(p1, p2));
+		
+		Polynomial result1(addition(p1, p2));
+		Polynomial result2 = p1 + p2;
 
 		unsigned int i = 0;
 		for (auto value : sum) {
-			assertEqual(result.getCoefficientAt(i++), value, "Error: sum operation usign external function");
+			assertEqual(result1.getCoefficientAt(i), value, "Error: sum operation usign external function");
+			assertEqual(result2.getCoefficientAt(i++), value, "Error: sum operation usign external function");
 		}
 	}
 	std::cout << "Test Addition OK" << std::endl;
@@ -203,13 +191,13 @@ void testCalculate() {
 		Polynomial p2({1, 2, -1, 1});
 		assertEqual((p1 * p2)(2), 90, "Error: calculate method (p1 * p2)(2)");
 	}
-	std::cout << "Test Caclculate OK" << std::endl;
+	std::cout << "Test Calculate OK" << std::endl;
 }
 
 void testPrint() {
 	{
 		Polynomial p1({1, 4, 0, 3, 5});
-		std::string expression = "1x^4 + 4x^3 + 3x^1 + 5x^0";
+		std::string expression = "5x^4 + 3x^3 + 4x^1 + 1x^0";
 		std::ostringstream os;
 		os << p1;
 		assertEqual(expression == os.str(), 1, "Error: writing to stream");
