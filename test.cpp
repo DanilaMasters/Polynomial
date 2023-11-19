@@ -173,6 +173,11 @@ void testCalculate() {
 		Polynomial p({2, -2, 3});
 		assertEqual(p(2), 10, "Error: calculate method");
 	}
+
+	{
+		Polynomial p({-1, 3, 0, 2, -1, 1});
+		assertEqual(p(2), 37, "Error: calculate method");
+	}
 	std::cout << "Test Caclculate OK" << std::endl;
 }
 
