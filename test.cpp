@@ -163,13 +163,27 @@ void testMultiply() {
 	std::cout << "Test multiplication OK" << std::endl;
 }
 
+void testCalculate() {
+	{
+		Polynomial p({1, 2, -1, 1});
+		assertEqual(p(2), 9, "Error: calculate method");
+	}
+
+	{
+		Polynomial p({2, -2, 3});
+		assertEqual(p(2), 10, "Error: calculate method");
+	}
+	std::cout << "Test Caclculate OK" << std::endl;
+}
+
 void testAll() {
 	std::vector<std::function<void()>> tests = {
 		testConstructors,
 		testCoefficients,
 		testSum,
 		testSub,
-		testMultiply
+		testMultiply,
+		testCalculate
 	};
 	static unsigned int counter = tests.size();
 	for (auto& test : tests) {

@@ -15,10 +15,12 @@ public:
 
     int getCoefficientAt(unsigned int) const;
     void setCoefficientAt(unsigned int, int);
+    int calculate(int value) const;
 
     Polynomial& operator+(const Polynomial&);
     Polynomial& operator-(const Polynomial&);
     Polynomial& operator*(const Polynomial&);
+    int operator()(int x);
 
     friend Polynomial substraction(const Polynomial&, const Polynomial&);
     friend std::ostream& operator<<(std::ostream&, const Polynomial&);

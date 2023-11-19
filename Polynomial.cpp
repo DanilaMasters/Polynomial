@@ -41,6 +41,27 @@ void Polynomial::setCoefficientAt(unsigned int index, int value) {
     coefficients[index] = value;
 }
 
+int Polynomial::operator()(int x) {
+    int* tmp = new int[size], sum = 0;
+    int q = 1;
+    for (unsigned int i = 0; i < size; i++) {
+        tmp[i] = coefficients[i];
+        tmp[i] *= q;
+        q *= x;
+        sum += tmp[i];
+    }
+    return sum;
+}
+
+/*int Polynomial::calculate(int value) const {
+    int result = 0;
+    for (unsigned int i = 0; i < size - 1; i++) {
+        result += value * coefficients[i];
+    }
+    result += coefficients[size-1];
+    return result;
+}*/
+
 Polynomial& Polynomial::operator+(const Polynomial& p) {
     if (size != p.size) resize(std::max(size, p.size));
     for (unsigned int i = 0; i < std::min(size, p.size); i++) {
