@@ -4,23 +4,28 @@
 class Polynomial {
 public:
     Polynomial() = default;
-    Polynomial(unsigned int);
-    Polynomial(unsigned int, const int*);
+    Polynomial(const unsigned int);
+    Polynomial(const unsigned int, const int*);
+    Polynomial(std::initializer_list<int>);
     Polynomial(const Polynomial&);
     ~Polynomial();
 
-    inline unsigned int getDegree() { return degree; }
-    inline unsigned int getSize() { return size; }
-    inline void setDegree(int value) { degree = value; }
+    inline unsigned int getDegree() const { return size - 1; }
+    inline unsigned int getSize() const { return size; }
 
-    int coefficientAt(unsigned int);
-    void coefficientInsert(unsigned int, int);
+    int getCoefficientAt(unsigned int) const;
+    void setCoefficientAt(unsigned int, int);
 
     Polynomial& operator+(const Polynomial&);
+    Polynomial& operator-(const Polynomial&);
+    Polynomial& operator*(const Polynomial&);
+
+    friend Polynomial substraction(const Polynomial&, const Polynomial&);
+    friend std::ostream& operator<<(std::ostream&, const Polynomial&);
 private:
+    void resize(const unsigned int);
     int* coefficients{};
-    unsigned int size{};
-    unsigned int degree{};
+    unsigned int size = 1;
 };
 
 #endif //POLYNOMIAL_H
