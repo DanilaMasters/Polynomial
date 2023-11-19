@@ -5,7 +5,7 @@
 
 Polynomial::Polynomial(const unsigned int degree) {
     this->size = degree + 1;
-    coefficients = new double[size]();                 //zero initialization
+    coefficients = new double[size]();
 }
 
 Polynomial::Polynomial(const unsigned int degree , const int* coefficients) : Polynomial(degree) {
@@ -63,38 +63,59 @@ double Polynomial::operator()(double x) {
 }*/
 
 Polynomial Polynomial::operator+(const Polynomial& p) {
-    if (size != p.size) resize(std::max(size, p.size));
-    for (unsigned int i = 0; i < std::min(size, p.size); i++) {
-        this->coefficients[i] += p.coefficients[i];
+    Polynomial tmp(p.getDegree() > getDegree() ? p.getDegree() : getDegree());
+    for (unsigned int i = 0; i < size; i++) {
+        tmp.coefficients[i] += coefficients[i]; 
     }
-    return *this;
+    for (unsigned int i = 0; i < p.size;  i++) {
+        tmp.coefficients[i] += p.coefficients[i];
+    }
+    return tmp;
 }
 
-Polynomial Polynomial::operator-(const Polynomial& p) {
-    if (size != p.size) resize(std::max(size, p.size));
-    for (unsigned int i = 0; i < std::min(size, p.size); i++) {
-        this->coefficients[i] -= p.coefficients[i];
+Polynomial operator*(const Polynomial& p, double value) {
+    Polynomial tmp(p.getDegree());
+    for (unsigned int i = 0; i < p.getSize(); i++) {
+        tmp.setCoefficientAt(i, p.getCoefficientAt(i) * value);
     }
-    return *this;
+    return tmp;
 }
 
-Polynomial Polynomial::operator*(const Polynomial& p) {
+Polynomial operator*(double value, const Polynomial& p) {
+    return p * value;
+}
+
+Polynomial operator-(Polynomial& p1, Polynomial& p2) {
+    return p1 + (-1) * p2;
+}
+
+Polynomial Polynomial::operator*(Polynomial& p) {
     Polynomial tmp(getDegree() + p.getDegree());
-    for (unsigned int i = 0; i < size; i++)
-    {
-        for (unsigned int j = 0; j < p.size; j++)
-        {
+    for (unsigned int i = 0; i < size; i++) {
+        for (unsigned int j = 0; j < p.size; j++) {
             tmp.coefficients[i+j] += coefficients[i] * p.coefficients[j];
         }
     }
     return tmp;
 }
 
-std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
+/*std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
     for (unsigned int i = 0; i < p.size; i++) {
         os << p.coefficients[i] << " ";
     }
     os << std::endl;
+    return os;
+}*/
+
+std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
+    for (unsigned int i = 0; i < p.getSize(); i++) {
+        if (p.getCoefficientAt(i) != 0) {
+            os << p.getCoefficientAt(i) << "x^" << p.getDegree() - i;
+            if (i < p.getSize() - 1) {
+                os << " + ";
+            }
+        }
+    }
     return os;
 }
 

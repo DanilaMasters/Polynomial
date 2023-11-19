@@ -18,7 +18,7 @@ public:
 
     Polynomial operator+(const Polynomial&);
     Polynomial operator-(const Polynomial&);
-    Polynomial operator*(const Polynomial&);
+    Polynomial operator*(Polynomial&);
     double operator()(double x);
 
     friend Polynomial substraction(const Polynomial&, const Polynomial&);
