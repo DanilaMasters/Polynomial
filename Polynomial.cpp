@@ -5,7 +5,7 @@
 
 Polynomial::Polynomial(const unsigned int degree) {
     this->size = degree + 1;
-    coefficients = new int[size]();                 //zero initialization
+    coefficients = new double[size]();                 //zero initialization
 }
 
 Polynomial::Polynomial(const unsigned int degree , const int* coefficients) : Polynomial(degree) {
@@ -31,17 +31,17 @@ Polynomial::~Polynomial() {
     delete[] coefficients;
 }
 
-int Polynomial::getCoefficientAt(unsigned int index) const { 
+double Polynomial::getCoefficientAt(unsigned int index) const { 
     if (index >= size) throw std::runtime_error("Index exceeds array size.");
     return coefficients[index];
 }
 
-void Polynomial::setCoefficientAt(unsigned int index, int value) {
+void Polynomial::setCoefficientAt(unsigned int index, double value) {
     if (index >= size) throw std::runtime_error("Error: index exceed coefficients array size");
     coefficients[index] = value;
 }
 
-int Polynomial::operator()(int x) {
+double Polynomial::operator()(double x) {
     int* tmp = new int[size], sum = 0;
     int q = 1;
     for (unsigned int i = 0; i < size; i++) {
@@ -62,7 +62,7 @@ int Polynomial::operator()(int x) {
     return result;
 }*/
 
-Polynomial& Polynomial::operator+(const Polynomial& p) {
+Polynomial Polynomial::operator+(const Polynomial& p) {
     if (size != p.size) resize(std::max(size, p.size));
     for (unsigned int i = 0; i < std::min(size, p.size); i++) {
         this->coefficients[i] += p.coefficients[i];
@@ -70,7 +70,7 @@ Polynomial& Polynomial::operator+(const Polynomial& p) {
     return *this;
 }
 
-Polynomial& Polynomial::operator-(const Polynomial& p) {
+Polynomial Polynomial::operator-(const Polynomial& p) {
     if (size != p.size) resize(std::max(size, p.size));
     for (unsigned int i = 0; i < std::min(size, p.size); i++) {
         this->coefficients[i] -= p.coefficients[i];
@@ -78,21 +78,16 @@ Polynomial& Polynomial::operator-(const Polynomial& p) {
     return *this;
 }
 
-Polynomial& Polynomial::operator*(const Polynomial& p) {
+Polynomial Polynomial::operator*(const Polynomial& p) {
     Polynomial tmp(getDegree() + p.getDegree());
     for (unsigned int i = 0; i < size; i++)
     {
         for (unsigned int j = 0; j < p.size; j++)
         {
             tmp.coefficients[i+j] += coefficients[i] * p.coefficients[j];
-            //res.setCoefficientAtIndex(i + j, res.getCoefficientAtIndex(i + j) + p1.getCoefficientAtIndex(i) * p2.getCoefficientAtIndex(j));
         }
     }
-    resize(tmp.size);
-    for (unsigned int i = 0; i < this->size; i++) {
-        coefficients[i] = tmp.coefficients[i];
-    }
-    return *this;
+    return tmp;
 }
 
 std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
@@ -104,7 +99,7 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
 }
 
 void Polynomial::resize(const unsigned int size) {
-    int* tmp = new int[size]();
+    double* tmp = new double[size]();
     if (tmp == nullptr) throw std::runtime_error("Error: couldn`t allocate memmory in resize method");
     for (unsigned int i = 0; i < this->size; i++) {
         tmp[i] = coefficients[i];
