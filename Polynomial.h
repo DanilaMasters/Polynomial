@@ -19,14 +19,19 @@ public:
     Polynomial operator+(const Polynomial&);
     Polynomial operator-(const Polynomial&);
     Polynomial operator*(Polynomial&);
-    double operator()(double x);
+
+    double operator[](unsigned int) const;
+    double operator()(double) const;
+    
+    Polynomial& operator++();
+    Polynomial operator++(int);
 
     friend Polynomial substraction(const Polynomial&, const Polynomial&);
     friend std::ostream& operator<<(std::ostream&, const Polynomial&);
 private:
     void resize(const unsigned int);
     double* coefficients{};
-    unsigned int size = 1;
+    unsigned int size = 0;
 };
 
 #endif //POLYNOMIAL_H

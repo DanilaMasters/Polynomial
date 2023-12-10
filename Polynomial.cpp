@@ -41,19 +41,11 @@ void Polynomial::setCoefficientAt(unsigned int index, double value) {
     coefficients[index] = value;
 }
 
-/*double Polynomial::operator()(double x) {
-    int* tmp = new int[size], sum = 0;
-    int q = 1;
-    for (unsigned int i = 0; i < size; i++) {
-        tmp[i] = coefficients[i];
-        tmp[i] *= q;
-        q *= x;
-        sum += tmp[i];
-    }
-    return sum;
-}*/
+double& Polynomial::operator[](unsigned int index) const {
+    return coefficients[index];
+}
 
-double Polynomial::operator()(double x) {
+double Polynomial::operator()(double x) const {
     double result = coefficients[getDegree()];
     for (int i = getDegree() - 1; i >= 0; i--) {
         result = result * x + coefficients[i];
@@ -61,14 +53,34 @@ double Polynomial::operator()(double x) {
     return result;
 }
 
-/*int Polynomial::calculate(int value) const {
-    int result = 0;
-    for (unsigned int i = 0; i < size - 1; i++) {
-        result += value * coefficients[i];
+Polynomial& Polynomial::operator=(const Polynomial& other) {
+    if (this == &other) {
+        return *this;
     }
-    result += coefficients[size-1];
-    return result;
-}*/
+
+    if (size != other.size) {
+        double* tmp = new double[other.size];
+        delete coefficients;
+        coefficients = tmp;
+        size = other.size;
+    }
+
+    std::copy(other.coefficients, other.coefficients + other.size, coefficients);
+    return *this;
+}
+
+Polynomial& Polynomial::operator++() {
+    for (unsigned int i = 0; i < size; i++) {
+        coefficients[i] += 1;
+    }
+    return *this;
+}
+
+Polynomial Polynomial::operator++(int d) {
+    Polynomial old = *this;
+    operator++();
+    return old;
+}
 
 Polynomial Polynomial::operator+(const Polynomial& p) {
     Polynomial tmp(p.getDegree() > getDegree() ? p.getDegree() : getDegree());
