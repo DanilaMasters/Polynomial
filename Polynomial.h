@@ -35,6 +35,9 @@ public:
     Polynomial& operator--();
     Polynomial operator--(int);
 
+    Polynomial& operator+=(const Polynomial&);
+    friend Polynomial operator-=(Polynomial&, const Polynomial&);
+
     friend Polynomial substraction(const Polynomial&, const Polynomial&);
     friend std::istream& operator>>(std::istream&, const Polynomial&);
     friend std::ostream& operator<<(std::ostream&, const Polynomial&);

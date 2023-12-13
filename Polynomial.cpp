@@ -39,18 +39,6 @@ Polynomial::~Polynomial()
     delete[] coefficients;
 }
 
-double Polynomial::getCoefficientAt(unsigned int index) const 
-{ 
-    if (index >= size) throw std::runtime_error("Index exceeds array size.");
-    return coefficients[index];
-}
-
-void Polynomial::setCoefficientAt(unsigned int index, double value) 
-{
-    if (index >= size) throw std::runtime_error("Error: index exceed coefficients array size");
-    coefficients[index] = value;
-}
-
 double Polynomial::operator[](unsigned int index) const
 {
     return coefficients[index];
@@ -138,7 +126,7 @@ Polynomial Polynomial::operator+(const Polynomial& p)
 Polynomial operator*(const Polynomial& p, double value) 
 {
     Polynomial tmp(p.size);
-    for (int i = 0; i < p.size; i++)
+    for (unsigned int i = 0; i < p.size; i++)
     {
         tmp.coefficients[i] = p.coefficients[i] * value;
     }
@@ -168,10 +156,27 @@ Polynomial Polynomial::operator*(Polynomial& p)
     return tmp;
 }
 
+Polynomial& Polynomial::operator+=(const Polynomial& rhs) {
+    unsigned int j;
+    if (rhs.size > size) {
+        resize(rhs.size);
+        j = size;
+    } else {
+        j = rhs.size;
+    }
+    for (unsigned int i = 0; i < j; i++) {
+        double num1 = i < rhs.size ? rhs.coefficients[i] : 0;
+        double num2 = i < size ? coefficients[i] : 0;
+        coefficients[i] = num1 + num2;
+    }
+    return *this;
+}
+
 std::istream& operator>>(std::istream& is, const Polynomial& p) 
 {
     for (unsigned int i = 0; i < p.size; i++) 
     {
+        std::cout << "c[" << i << "] = ";
         is >> p.coefficients[i];
     }
     return is;
@@ -181,9 +186,9 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p)
 {
     for (unsigned int i = 0; i < p.size; i++) 
     {
-        if (p.getCoefficientAt(p.size - 1 - i) != 0) 
+        if (p.coefficients[p.size - 1 - i] != 0) 
         {
-            os << p.getCoefficientAt(p.size - 1 - i) << "x^" << p.size - 1 - i;
+            os << p.coefficients[p.size - 1 - i] << "x^" << p.size - 1 - i;
             if (i < p.size - 1) 
             {
                 os << " + ";
@@ -193,7 +198,7 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p)
     return os;
 }
 
-/*void Polynomial::resize(const unsigned int size) 
+void Polynomial::resize(const unsigned int size) 
 {
     double* tmp = new double[size]();
     if (tmp == nullptr) throw std::runtime_error("Error: couldn`t allocate memmory in resize method");
@@ -204,7 +209,7 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p)
     delete[] coefficients;
     coefficients = tmp;
     this->size = size;
-}*/
+}
 
 Polynomial addition(const Polynomial& p1, const Polynomial& p2) 
 {
@@ -212,9 +217,9 @@ Polynomial addition(const Polynomial& p1, const Polynomial& p2)
     Polynomial result(degree);
     for (unsigned int i = 0; i < result.getSize(); i++) 
     {
-        int value1 = (i < p1.getSize()) ? p1.getCoefficientAt(i) : 0;
-        int value2 = (i < p2.getSize()) ? p2.getCoefficientAt(i) : 0;
-        result.setCoefficientAt(i, value1 + value2);
+        double value1 = (i < p1.getSize()) ? p1[i] : 0;
+        double value2 = (i < p2.getSize()) ? p2[i] : 0;
+        result[i] = value1 + value2;
     }
     return result;
 }
@@ -225,9 +230,26 @@ Polynomial substraction(const Polynomial& p1, const Polynomial& p2)
     Polynomial result(degree);
     for (unsigned int i = 0; i < result.size; i++) 
     {
-        int value1 = (i < p1.size) ? p1.coefficients[i] : 0;
-        int value2 = (i < p2.size) ? p2.coefficients[i] : 0;
+        double value1 = (i < p1.size) ? p1.coefficients[i] : 0;
+        double value2 = (i < p2.size) ? p2.coefficients[i] : 0;
         result.coefficients[i] = value1 - value2;
     }
     return result;
+}
+
+Polynomial operator-=(Polynomial& lhs, const Polynomial& rhs) {
+    unsigned int j;
+    if (rhs.size > lhs.size) {
+        lhs.resize(rhs.size);
+        j = rhs.size;
+    } else {
+        j = lhs.size;
+    }
+    for (unsigned int i = 0; i < j; i++) {
+        double value1 = (i < lhs.size) ? lhs.coefficients[i] : 0;
+        double value2 = (i < rhs.size) ? rhs.coefficients[i] : 0;
+        lhs.coefficients[i] = value1 - value2;   
+    }
+
+    return lhs;
 }

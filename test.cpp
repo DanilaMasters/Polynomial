@@ -25,7 +25,7 @@ void testConstructors() {
 		Polynomial p(5);
 		assertEqual(p.getDegree(), 5u, "Polynomial degree");
 		for (unsigned int i = 0; i < p.getSize(); i++) {
-			assertEqual(p.getCoefficientAt(i), 0, "Error: constructor with one parameter");
+			assertEqual(p[i], 0, "Error: constructor with one parameter");
 		}
 	}
 
@@ -35,7 +35,7 @@ void testConstructors() {
 		Polynomial p(size, values);
 		for (auto value : values) {
 			static unsigned int i = 0;
-			assertEqual(p.getCoefficientAt(i++), value, "Error: constructor with two parameters");
+			assertEqual(p[i++], value, "Error: constructor with two parameters");
 		}
 	}
 
@@ -44,7 +44,7 @@ void testConstructors() {
 		Polynomial p(values);
 		for (auto value : values) {
 			static unsigned int i = 0;
-			assertEqual(p.getCoefficientAt(i++), value, "Error: constructor with initializer list");
+			assertEqual(p[i++], value, "Error: constructor with initializer list");
 		}
 	}
 
@@ -53,7 +53,7 @@ void testConstructors() {
 		Polynomial p1(values);
 		Polynomial p2(p1);
 		for (unsigned int i = 0; i < p2.getSize(); i++) {
-			assertEqual(p2.getCoefficientAt(i), p1.getCoefficientAt(i), "Error: copy constructor" + std::to_string(i));
+			assertEqual(p2[i], p1[i], "Error: copy constructor" + std::to_string(i));
 		}
 	}
 	
@@ -70,20 +70,12 @@ void testCoefficients() {
 			values[i] = i;	
 
 		for (int i = 0; i < size; i++)
-			p.setCoefficientAt(i, values[i]);
+			p[i] = values[i];
 
 		for (unsigned int i = 0; i < p.getSize(); i++)
-			assertEqual(p.getCoefficientAt(i), values[i], "Error: coefficient insertion at index" + std::to_string(i));
+			assertEqual(p[i], values[i], "Error: coefficient insertion at index" + std::to_string(i));
 	}
 
-	{
-		try {
-			Polynomial p;
-			p.setCoefficientAt(10, 5);
- 		} catch (const std::runtime_error& ex) {
-			assertEqual(strcmp(ex.what(), "Error: index exceed coefficients array size"), 0, "Accessing value with index out of range");
-		}
-	}
 	std::cout << "Test Coefficients OK" << std::endl;
 }
 
@@ -99,8 +91,8 @@ void testSum() {
 
 		unsigned int i = 0;
 		for (auto value : sum) {
-			assertEqual(result1.getCoefficientAt(i), value, "Error: sum operation usign external function");
-			assertEqual(result2.getCoefficientAt(i++), value, "Error: sum operation usign external function");
+			assertEqual(result1[i], value, "Error: sum operation usign external function");
+			assertEqual(result2[i++], value, "Error: sum operation usign external function");
 		}
 	}
 	std::cout << "Test Addition OK" << std::endl;
@@ -117,7 +109,7 @@ void testSub() {
 
 		for (auto value : sub) {
 			static unsigned int i = 0;
-			assertEqual(result.getCoefficientAt(i++), value, "Error: sub operation using class method");
+			assertEqual(result[i++], value, "Error: sub operation using class method");
 		}
 	}
 
@@ -132,8 +124,8 @@ void testSub() {
 
 		for (auto value : sub) {
 			static unsigned int i = 0;
-			assertEqual(result1.getCoefficientAt(i), value, "Error: sub operation using friend function");
-			assertEqual(result2.getCoefficientAt(i++), value, "Error: sub operation using overloaded external function");
+			assertEqual(result1[i], value, "Error: sub operation using friend function");
+			assertEqual(result2[i++], value, "Error: sub operation using overloaded external function");
 		}
 	}
 
@@ -151,7 +143,7 @@ void testMultiply() {
 
 		for (auto value : mult) {
 			static unsigned int i = 0;
-			assertEqual(result.getCoefficientAt(i++), value, "Error: mult operation");
+			assertEqual(result[i++], value, "Error: mult operation");
 		}
 	}
 
@@ -163,8 +155,8 @@ void testMultiply() {
 		Polynomial res1(p * 5);
 		Polynomial res2(5 * p);
 		for (unsigned int i = 0; i < p.getSize(); i++) {
-			assertEqual(res1.getCoefficientAt(i), multiplyedValues[i], "Error: multiplication by a value (postfix)");
-			assertEqual(res2.getCoefficientAt(i), multiplyedValues[i], "Error: multiplication by a value (prefix)");
+			assertEqual(res1[i], multiplyedValues[i], "Error: multiplication by a value (postfix)");
+			assertEqual(res2[i], multiplyedValues[i], "Error: multiplication by a value (prefix)");
 		}
 	}
 	

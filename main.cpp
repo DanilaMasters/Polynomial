@@ -47,5 +47,18 @@ int main()
     
     std::cin >> p22;
     std::cout << "p22= " << p22 << std::endl;
+
+    p22 += p6;
+    std::cout << "p6 = " << p6 << "\np22 += p6 = " << p22 << std::endl;
+
+    p22 -= p6;
+    std::cout << "\np22 -= p6 => p22 = " << p22 << std::endl;
+
+    p22 -= p6;
+    std::cout << "p22 -= p6 => p22 = " << p22 << std::endl;
+
+    std::cout << "p22 * 2 = " << p22 * 2 << std::endl;
+    std::cout << "p22 * 2 = " << 2 * p22 << std::endl;
+
     return 0;
 }
