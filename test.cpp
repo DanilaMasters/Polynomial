@@ -3,6 +3,7 @@
 #include <functional>
 #include "Polynomial.h"
 #include <string.h>
+#include <vector>
 
 template<typename A, typename B>
 void assertEqual(const A& a, const B& b, const std::string& hint) {

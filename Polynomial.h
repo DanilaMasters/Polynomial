@@ -1,7 +1,12 @@
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
 
-class Polynomial {
+class Polynomial 
+{
+private:
+    void resize(const unsigned int);
+    double* coefficients{};
+    unsigned int size = 1;
 public:
     Polynomial() = default;
     Polynomial(const unsigned int);
@@ -21,17 +26,20 @@ public:
     Polynomial operator*(Polynomial&);
 
     double operator[](unsigned int) const;
+    double& operator[](unsigned int);
     double operator()(double) const;
+    Polynomial& operator=(const Polynomial&);
     
     Polynomial& operator++();
     Polynomial operator++(int);
+    Polynomial& operator--();
+    Polynomial operator--(int);
 
     friend Polynomial substraction(const Polynomial&, const Polynomial&);
+    friend std::istream& operator>>(std::istream&, const Polynomial&);
     friend std::ostream& operator<<(std::ostream&, const Polynomial&);
-private:
-    void resize(const unsigned int);
-    double* coefficients{};
-    unsigned int size = 0;
+    friend Polynomial operator*(const Polynomial&, double);
+    friend Polynomial operator*(double, const Polynomial&);
 };
 
 #endif //POLYNOMIAL_H
