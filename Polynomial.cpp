@@ -2,14 +2,17 @@
 #include <initializer_list>
 #include <stdexcept>
 #include <iostream>
+#include <utility>
 
-Polynomial::Polynomial(const unsigned int degree) 
+template<typename T>
+Polynomial<T>::Polynomial(const unsigned int degree) 
 {
     this->size = degree + 1;
-    coefficients = new double[size]();
+    coefficients = new T[size]();
 }
 
-Polynomial::Polynomial(const unsigned int degree , const int* coefficients) : Polynomial(degree) 
+template<typename T>
+Polynomial<T>::Polynomial(const unsigned int degree , const T* coefficients) : Polynomial(degree) 
 {
     for (unsigned int i = 0; i < size; i++) 
     {
@@ -17,7 +20,8 @@ Polynomial::Polynomial(const unsigned int degree , const int* coefficients) : Po
     }
 }
 
-Polynomial::Polynomial(std::initializer_list<int> list) : Polynomial(list.size() - 1) 
+template<typename T>
+Polynomial<T>::Polynomial(std::initializer_list<T> list) : Polynomial(list.size() - 1) 
 {
     unsigned int i = 0;
     for (auto item : list)
@@ -26,7 +30,8 @@ Polynomial::Polynomial(std::initializer_list<int> list) : Polynomial(list.size()
     }
 }
 
-Polynomial::Polynomial(const Polynomial& p) : Polynomial(p.size - 1) 
+template<typename T>
+Polynomial<T>::Polynomial(const Polynomial<T>& p) : Polynomial(p.size - 1) 
 {
     for (unsigned int i = 0; i < size; i++) 
     {
@@ -34,22 +39,26 @@ Polynomial::Polynomial(const Polynomial& p) : Polynomial(p.size - 1)
     }
 }
 
-Polynomial::~Polynomial() 
+template<typename T>
+Polynomial<T>::~Polynomial() 
 {
     delete[] coefficients;
 }
 
-double Polynomial::operator[](unsigned int index) const
+template<typename T>
+T Polynomial<T>::operator[](unsigned int index) const
 {
     return coefficients[index];
 }
 
-double& Polynomial::operator[](unsigned int index)
+template<typename T>
+T& Polynomial<T>::operator[](unsigned int index)
 {
     return coefficients[index];
 }
 
-double Polynomial::operator()(double x) const 
+template<typename T>
+T Polynomial<T>::operator()(T x) const 
 {
     double result = coefficients[getDegree()];
     for (int i = getDegree() - 1; i >= 0; i--) 
@@ -59,16 +68,13 @@ double Polynomial::operator()(double x) const
     return result;
 }
 
-Polynomial& Polynomial::operator=(const Polynomial& other) 
+template<typename T>
+    template<typename U>
+Polynomial<T>& Polynomial<T>::operator=(const Polynomial<U>& other) 
 {
-    if (this == &other) 
-    {
-        return *this;
-    }
-
     if (size != other.size) 
     {
-        double* tmp = new double[other.size];
+        T* tmp = new T[other.size];
         delete coefficients;
         coefficients = tmp;
         size = other.size;
@@ -78,7 +84,8 @@ Polynomial& Polynomial::operator=(const Polynomial& other)
     return *this;
 }
 
-Polynomial& Polynomial::operator++() 
+template<typename T>
+Polynomial<T>& Polynomial<T>::operator++() 
 {
     for (unsigned int i = 0; i < size; i++) 
     {
@@ -87,14 +94,16 @@ Polynomial& Polynomial::operator++()
     return *this;
 }
 
-Polynomial Polynomial::operator++(int d) 
+template<typename T>
+Polynomial<T> Polynomial<T>::operator++(int d) 
 {
-    Polynomial old = *this;
+    Polynomial<T> old = *this;
     operator++();
     return old;
 }
 
-Polynomial& Polynomial::operator--() 
+template<typename T>
+Polynomial<T>& Polynomial<T>::operator--() 
 {
     for (unsigned int i = 0; i < size; i++) {
         coefficients[i] -= 1;
@@ -102,30 +111,18 @@ Polynomial& Polynomial::operator--()
     return *this;
 }
 
-Polynomial Polynomial::operator--(int d) 
+template<typename T>
+Polynomial<T> Polynomial<T>::operator--(int d) 
 {
-    Polynomial old = *this;
+    Polynomial<T> old = *this;
     operator++();
     return old;
 }
 
-Polynomial Polynomial::operator+(const Polynomial& p) 
+template<typename T1, typename T2>
+Polynomial<decltype(T1() * T2())> operator*(const Polynomial<T1>& p, T2 value) 
 {
-    Polynomial tmp(p.size > size ? p.size : size);
-    for (unsigned int i = 0; i < size; i++) 
-    {
-        tmp.coefficients[i] += coefficients[i]; 
-    }
-    for (unsigned int i = 0; i < p.size;  i++) 
-    {
-        tmp.coefficients[i] += p.coefficients[i];
-    }
-    return tmp;
-}
-
-Polynomial operator*(const Polynomial& p, double value) 
-{
-    Polynomial tmp(p.size);
+    Polynomial<decltype(T1() * T2())> tmp(p.getDegree());
     for (unsigned int i = 0; i < p.size; i++)
     {
         tmp.coefficients[i] = p.coefficients[i] * value;
@@ -133,30 +130,34 @@ Polynomial operator*(const Polynomial& p, double value)
     return tmp;
 }
 
-Polynomial operator*(double value, const Polynomial& p) 
+template<typename T1,typename T2>
+Polynomial<decltype(T1() * T2())> operator*(T1 value, const Polynomial<T2>& p) 
 {
     return p * value;
 }
 
-Polynomial operator-(Polynomial& p1, Polynomial& p2) 
+template<typename U>
+Polynomial<U> operator-(Polynomial<U>& p1, Polynomial<U>& p2) 
 {
     return p1 + (-1) * p2;
 }
 
-Polynomial Polynomial::operator*(Polynomial& p)
+template<typename T1, typename T2>
+Polynomial<decltype(T1() * T2())> operator*(const Polynomial<T1>& lhs, const Polynomial<T2>& rhs)
 {
-    Polynomial tmp(size + p.size);
-    for (unsigned int i = 0; i < size; i++) 
+    Polynomial<decltype(T1() * T2())> tmp(lhs.getDegree() + rhs.getDegree());
+    for (unsigned int i = 0; i < lhs.size; i++) 
     {
-        for (unsigned int j = 0; j < p.size; j++) 
+        for (unsigned int j = 0; j < rhs.size; j++) 
         {
-            tmp.coefficients[i+j] += coefficients[i] * p.coefficients[j];
+            tmp.coefficients[i+j] += lhs.coefficients[i] * rhs.coefficients[j];
         }
     }
     return tmp;
 }
 
-Polynomial& Polynomial::operator+=(const Polynomial& rhs) {
+template<typename T>
+Polynomial<T>& Polynomial<T>::operator+=(const Polynomial<T>& rhs) {
     unsigned int j;
     if (rhs.size > size) {
         resize(rhs.size);
@@ -172,7 +173,8 @@ Polynomial& Polynomial::operator+=(const Polynomial& rhs) {
     return *this;
 }
 
-std::istream& operator>>(std::istream& is, const Polynomial& p) 
+template<typename U>
+std::istream& operator>>(std::istream& is, const Polynomial<U>& p) 
 {
     for (unsigned int i = 0; i < p.size; i++) 
     {
@@ -182,25 +184,24 @@ std::istream& operator>>(std::istream& is, const Polynomial& p)
     return is;
 }
 
-std::ostream& operator<<(std::ostream& os, const Polynomial& p) 
+template<typename U>
+std::ostream& operator<<(std::ostream& os, const Polynomial<U>& p) 
 {
     for (unsigned int i = 0; i < p.size; i++) 
     {
-        if (p.coefficients[p.size - 1 - i] != 0) 
+        os << p.coefficients[p.size - 1 - i] << "x^" << p.size - 1 - i;
+        if (i < p.size - 1) 
         {
-            os << p.coefficients[p.size - 1 - i] << "x^" << p.size - 1 - i;
-            if (i < p.size - 1) 
-            {
-                os << " + ";
-            }
+            os << " + ";
         }
     }
     return os;
 }
 
-void Polynomial::resize(const unsigned int size) 
+template<typename T>
+void Polynomial<T>::resize(const unsigned int size) 
 {
-    double* tmp = new double[size]();
+    T* tmp = new T[size]();
     if (tmp == nullptr) throw std::runtime_error("Error: couldn`t allocate memmory in resize method");
     for (unsigned int i = 0; i < this->size; i++) 
     {
@@ -211,10 +212,11 @@ void Polynomial::resize(const unsigned int size)
     this->size = size;
 }
 
-Polynomial addition(const Polynomial& p1, const Polynomial& p2) 
+template<typename T1, typename T2>
+Polynomial<decltype(T1() + T2())> operator+(const Polynomial<T1>& p1, const Polynomial<T2>& p2) 
 {
     const unsigned int degree = std::max(p1.getDegree(), p2.getDegree());
-    Polynomial result(degree);
+    Polynomial<decltype(T1() + T2())> result(degree);
     for (unsigned int i = 0; i < result.getSize(); i++) 
     {
         double value1 = (i < p1.getSize()) ? p1[i] : 0;
@@ -224,10 +226,11 @@ Polynomial addition(const Polynomial& p1, const Polynomial& p2)
     return result;
 }
 
-Polynomial substraction(const Polynomial& p1, const Polynomial& p2) 
+template<typename U>
+Polynomial<U> substraction(const Polynomial<U>& p1, const Polynomial<U>& p2) 
 {
     const unsigned int degree = std::max(p1.size, p2.size) - 1;
-    Polynomial result(degree);
+    Polynomial<U> result(degree);
     for (unsigned int i = 0; i < result.size; i++) 
     {
         double value1 = (i < p1.size) ? p1.coefficients[i] : 0;
@@ -237,7 +240,8 @@ Polynomial substraction(const Polynomial& p1, const Polynomial& p2)
     return result;
 }
 
-Polynomial operator-=(Polynomial& lhs, const Polynomial& rhs) {
+template<typename U>
+Polynomial<U> operator-=(Polynomial<U>& lhs, const Polynomial<U>& rhs) {
     unsigned int j;
     if (rhs.size > lhs.size) {
         lhs.resize(rhs.size);

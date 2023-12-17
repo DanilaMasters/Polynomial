@@ -86,13 +86,11 @@ void testSum() {
 
 		auto sum = { 8, 7, 6, 8, 6 };
 		
-		Polynomial result1(addition(p1, p2));
-		Polynomial result2 = p1 + p2;
+		Polynomial result1 = p1 + p2;
 
 		unsigned int i = 0;
 		for (auto value : sum) {
-			assertEqual(result1[i], value, "Error: sum operation usign external function");
-			assertEqual(result2[i++], value, "Error: sum operation usign external function");
+			assertEqual(result1[i++], value, "Error: sum operation usign external function");
 		}
 	}
 	std::cout << "Test Addition OK" << std::endl;
