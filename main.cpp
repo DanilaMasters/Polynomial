@@ -39,8 +39,8 @@ int main()
     Polynomial p3(3, val1);
     Polynomial p4(2, val2);
 
-    Polynomial p5({1.2, 2, 3, 4.3, 5});
-    Polynomial p6({2, 3, 1, 4});
+    Polynomial<double> p5({1.2, 2, 3, 4.3, 5});
+    Polynomial<int> p6({2, 3, 1, 4});
 
     std::cout << "(" << p3 << ")" << " + " << "(" << p4 << ")" << " = " << p3 + p4 << std::endl;
     std::cout << "(" << p5 << ")" << " + " << "(" << p6 << ")" << " = " << p5 + p6 << std::endl;

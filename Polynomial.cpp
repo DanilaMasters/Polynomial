@@ -7,6 +7,7 @@
 template<typename T>
 Polynomial<T>::Polynomial(const unsigned int degree) 
 {
+    std::cout << "Base template" << std::endl;
     this->size = degree + 1;
     coefficients = new T[size]();
 }
