@@ -4,10 +4,9 @@
 #include <iostream>
 #include <utility>
 
-
 Polynomial<double>::Polynomial(const unsigned int degree) 
 {
-    std::cout << "Full double spec" << std::endl;
+    std::cout << "\nFull double spec" << std::endl;
     this->size = degree + 1;
     coefficients = new double[size]();
 }
@@ -70,7 +69,7 @@ double Polynomial<double>::operator()(double x) const
 }
 
 
-    template<typename U>
+template<typename U>
 Polynomial<double>& Polynomial<double>::operator=(const Polynomial<U>& other) 
 {
     if (size != other.size) 

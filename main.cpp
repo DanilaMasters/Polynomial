@@ -21,6 +21,25 @@ int main()
     Polynomial<int> p2({2, 3, 1, 4});
     print(p1, p2);
 
+    Polynomial<int> p11(p2);
+
+    std::cout << "p11 = " << p11 << std::endl;
+
+    p2 += p1;
+
+    std::cout << "p2 = " << p2 << std::endl;
+
+
+    std::cout << "_______________________" << std::endl;
+
+    int c1[5] = {1, 2, 3, 4, 5};
+    Polynomial<int[5]> pp(c1);
+
+    std::cout << "pp = " << pp << std::endl;
+
+    std::cout << "_______________________" << std::endl;
+
+
     p1[0] = 0;
     p2[1] = 0;
     print(p1, p2);
@@ -29,15 +48,15 @@ int main()
     p2.operator[](3) = 444;
     print(++p1, p2++);
 
-    Polynomial p22{1, 2, 3};
+    Polynomial<int> p22{1, 2, 3};
     p1 = p22;
     print(p22, p1, "p22", "p1");
 
     int val1[] = {1, 2, 3, 4};
     int val2[] = {1, 2, 3};
 
-    Polynomial p3(3, val1);
-    Polynomial p4(2, val2);
+    Polynomial<int> p3(3, val1);
+    Polynomial<int> p4(2, val2);
 
     Polynomial<double> p5({1.2, 2, 3, 4.3, 5});
     Polynomial<int> p6({2, 3, 1, 4});

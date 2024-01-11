@@ -7,7 +7,7 @@
 template<typename T>
 Polynomial<T>::Polynomial(const unsigned int degree) 
 {
-    std::cout << "Base template" << std::endl;
+    std::cout << "\nBase template" << std::endl;
     this->size = degree + 1;
     coefficients = new T[size]();
 }
@@ -33,6 +33,16 @@ Polynomial<T>::Polynomial(std::initializer_list<T> list) : Polynomial(list.size(
 
 template<typename T>
 Polynomial<T>::Polynomial(const Polynomial<T>& p) : Polynomial(p.size - 1) 
+{
+    for (unsigned int i = 0; i < size; i++) 
+    {
+        this->coefficients[i] = p.coefficients[i];
+    }
+}
+
+template<typename T>
+    template<typename U>
+Polynomial<T>::Polynomial(const Polynomial<U>& p) : Polynomial<T>(p.size - 1) 
 {
     for (unsigned int i = 0; i < size; i++) 
     {
@@ -70,8 +80,7 @@ T Polynomial<T>::operator()(T x) const
 }
 
 template<typename T>
-    template<typename U>
-Polynomial<T>& Polynomial<T>::operator=(const Polynomial<U>& other) 
+Polynomial<T>& Polynomial<T>::operator=(const Polynomial<T>& other) 
 {
     if (size != other.size) 
     {
@@ -83,6 +92,13 @@ Polynomial<T>& Polynomial<T>::operator=(const Polynomial<U>& other)
 
     std::copy(other.coefficients, other.coefficients + other.size, coefficients);
     return *this;
+}
+
+template<typename T>
+    template<typename U>
+Polynomial<T>& Polynomial<T>::operator=(const Polynomial<U>& other) 
+{
+    return Polynomial<T>::operator=((Polynomial<T>)other);
 }
 
 template<typename T>
@@ -155,6 +171,12 @@ Polynomial<decltype(T1() * T2())> operator*(const Polynomial<T1>& lhs, const Pol
         }
     }
     return tmp;
+}
+
+template<typename T>
+    template<typename U>
+Polynomial<T>& Polynomial<T>::operator+=(const Polynomial<U>& rhs) {
+    return Polynomial<T>::operator+=((Polynomial<T>)rhs);
 }
 
 template<typename T>

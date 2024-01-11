@@ -14,6 +14,10 @@ public:
     Polynomial(const unsigned int, const T*);
     Polynomial(std::initializer_list<T>);
     Polynomial(const Polynomial&);
+
+    template<typename U>
+    Polynomial(const Polynomial<U>&);
+
     ~Polynomial();
 
     inline unsigned int getDegree() const { return size - 1; }
@@ -29,6 +33,8 @@ public:
     T& operator[](unsigned int);
     T operator()(T) const;
 
+    Polynomial<T>& operator=(const Polynomial<T>&);
+
     template<typename U>
     Polynomial<T>& operator=(const Polynomial<U>&);
     
@@ -42,6 +48,9 @@ public:
     Polynomial& operator+=(const Polynomial&);
 
     template<typename U>
+    Polynomial& operator+=(const Polynomial<U>&);
+
+    template<typename U>
     friend Polynomial<U> operator-=(Polynomial<U>&, const Polynomial<U>&);
 
     template<typename U>
@@ -51,7 +60,7 @@ public:
     friend std::istream& operator>>(std::istream&, const Polynomial<U>&);
 
     template<typename U>
-    friend std::ostream& operator<<(std::ostream&, const Polynomial<U>&);\
+    friend std::ostream& operator<<(std::ostream&, const Polynomial<U>&);
     
     template<typename T1, typename T2>
     friend Polynomial<decltype(T1() * T2())> operator*(const Polynomial<T1>&, T2);
@@ -68,7 +77,8 @@ public:
 };
 
 template<>
-class Polynomial<double> {
+class Polynomial<double> 
+{
     private:
     void resize(const unsigned int);
     double* coefficients{};
@@ -79,6 +89,7 @@ public:
     Polynomial(const unsigned int, const double*);
     Polynomial(std::initializer_list<double>);
     Polynomial(const Polynomial&);
+
     ~Polynomial();
 
     inline unsigned int getDegree() const { return size - 1; }
@@ -126,6 +137,38 @@ public:
     
     template<typename T1, typename T2>
     friend Polynomial<decltype(T1() + T2())> operator+(const Polynomial<T1>&, const Polynomial<T2>&);
+};
+
+template<typename T, int size>
+class Polynomial<T[size]>
+{
+private:
+    void resize(const unsigned int);
+    T coefficients[size];
+public:
+    Polynomial(const T coefficients[size]) {
+        for(unsigned int i = 0; i < size; i++) {
+            this->coefficients[i] = coefficients[i];
+        }
+    }
+    // Polynomial(std::initializer_list<T>);
+    // Polynomial(const Polynomial&);
+    ~Polynomial() {}
+
+        
+
+    friend std::ostream& operator<<(std::ostream& os, const Polynomial<T[size]>& other) {
+        for (unsigned int i = 0; i < size; i++) 
+        {
+            os << other.coefficients[size - 1 - i] << "x^" << size - 1 - i;
+            if (i < size - 1) 
+            {
+                os << " + ";
+            }
+        }
+        return os;
+    }
+
 };
 
 #include "Polynomial.cpp"
